@@ -11,6 +11,7 @@ import articlesAdd from '@/views/articles/articlesAdd'
 import text from '@/views/articles/text'
 import text1 from '@/views/articles/text1'
 import timeLineadd from '@/views/articles/timeLineadd'
+import Dashboard from '@/views/dashboard'
 
 Vue.use(Router)
 
@@ -35,6 +36,16 @@ export default new Router({
       hidden: true
     },
     {
+       path: '/',
+       component: Home,
+       name: '',
+       iconCls: 'fa fa-address-card',
+       leaf: true,//只有一个节点
+       children: [
+           { path: '/dashboard', component: Dashboard, name: '主页' }
+       ]
+    },
+    {
       path: '/',
       component: Home,
       name: '内容管理',
@@ -42,18 +53,14 @@ export default new Router({
       children: [
           { path: '/articlesManage', component: articlesManage, name: '文章管理' },
           { path: '/timeLine', component: timeLine, name: '时光轴管理' },
-          { path: '/timeLineadd', component: timeLineadd, name: 'timeLineadd',hidden: true },
-          { path: '/hello', component: Hello, name: 'Hello',hidden: true },
-          { path: '/selectExcel', component: selectExcel, name: 'SelectExcel' },
-          { path: '/articlesAdd', component: articlesAdd, name: 'articlesAdd',hidden: true },
-          { path: '/text', component: text, name: 'text'},
-          { path: '/text1', component: text1, name: 'text1',hidden: true}
+          { path: '/timeLineadd', component: timeLineadd, name: '时光轴发布',hidden: true },
+          { path: '/articlesAdd', component: articlesAdd, name: '文章发布',hidden: true },
       ]
     },
     {
       path: '/',
       component: Home,
-      name: '导航二',
+      name: '评论管理',
       iconCls: 'fa fa-id-card-o',
       children: [
           { path: '/name', component: Form, name: 'Form' }
@@ -67,6 +74,11 @@ export default new Router({
       children: [
           { path: '/name', component: Form, name: 'Form' }
       ]
+    },
+    {
+        path: '*',
+        hidden: true,
+        redirect: { path: '/dashboard' }
     }
   ]
 })

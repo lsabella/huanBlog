@@ -1,35 +1,35 @@
 <template>
-  <div class="components-container">
-    <el-row type="flex" class="row-bg" justify="center">
-      <el-col :span="6"><div class="grid-content title-center center">添加时光轴</div></el-col>
-    </el-row>
-    <div class="editor-container">
-      <md-editor id='contentEditor' ref="contentEditor" v-model='content' :height="180" :zIndex='0'></md-editor>
-    </div>
-    <el-button @click='markdown2Html' style="margin-top:80px;" type="primary">预览<i class="el-icon-document el-icon--right"></i></el-button>
-    <el-button @click='submitLine' style="margin-top:80px;float:right;" type="primary">立即提交</el-button>
-    <el-button @click='goLinelists' style="margin-top:80px;float:right;" type="primary">返回列表</el-button>
-    <div v-html="html"></div>
+  <div>
+     <el-row type="flex" class="" justify="center">
+       <el-col :span="11"><div class="row-bg title-center"><hr class="title-line"/></div></el-col>
+       <el-col :span="3"><div class="grid-content title-center center">添加时光轴</div></el-col>
+       <el-col :span="11"><div class="row-bg title-center"><hr class="title-line"/></div></el-col>
+     </el-row>
+     <el-row type="flex" class="" justify="center">
+      <el-col :span="2"><span style="float:right;padding-right:20px;padding-top:10px;">内容</span></el-col>
+      <el-col :span="18" class="components-container">
+         <div style="margin-bottom:20px;">
+           <Tinymce :height=200 ref="editor" v-model="content"></Tinymce>
+         </div>
+         <el-button @click.native="submitLine">立即提交</el-button>
+         <el-button type="primary" @click.native="goLinelists">返回列表</el-button>
+         <div class='editor-content' style="margin-top:20px;" v-html='content'></div>
+       </el-col>
+       <el-col :span="1"></el-col>
+     </el-row>
   </div>
 </template>
 
 <script>
-  import MdEditor from '@/components/MdEditor';
+  import Tinymce from '@/components/Tinymce';
   export default {
-    components: { MdEditor },
+    components: { Tinymce },
     data() {
       return {
-        content: '## Simplemde',
-        html: ''
+        content: 'Tinymce'
       }
     },
     methods: {
-      markdown2Html() {
-        import('showdown').then(showdown => {
-          const converter = new showdown.Converter();
-          this.html = converter.makeHtml(this.content)
-        })
-      },
       goLinelists () {
        this.$router.push({path: '/timeLine'})
       },
@@ -61,8 +61,7 @@
     }
   }
   .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
+    padding: 15px 0;
   }
   .title-center {
     font-size: 20px;
@@ -76,6 +75,12 @@
     }
   .el-col {
     border-radius: 4px;
+  }
+  .title-line {
+    margin:0px;
+    height:1px;
+    border:0px;
+    background-color:#e2e2e2;
   }
 </style>
 

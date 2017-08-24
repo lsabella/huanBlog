@@ -56,7 +56,7 @@
                 })
               } else {
                 sessionStorage.setItem('user', JSON.stringify(user))
-                this.$router.push({ path: '/hello' })
+                this.$router.push({ path: '/dashboard' })
               }
             })
           } else {

@@ -1,5 +1,10 @@
 <template>
-  <div class="app-container calendar-list-container">
+ <div>
+    <el-row type="flex" class="" justify="center">
+      <el-col :span="11"><div class="row-bg title-center"><hr class="title-line"/></div></el-col>
+      <el-col :span="2"><div class="grid-content title-center center">控制台</div></el-col>
+      <el-col :span="11"><div class="row-bg title-center"><hr class="title-line"/></div></el-col>
+    </el-row>
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="标题" v-model="listQuery.title">
       </el-input>
@@ -20,117 +25,125 @@
       <el-checkbox class="filter-item" @change='tableKey=tableKey+1' v-model="showAuditor">显示审核人</el-checkbox>
     </div>
 
-    <el-table :key='tableKey' :data="list" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%;margin-top:20px;">
+    <el-row type="flex" class="" justify="center">
+      <el-col :span="11"><div class="row-bg title-center"><hr class="title-line"/></div></el-col>
+      <el-col :span="3"><div class="grid-content title-center center">文章列表</div></el-col>
+      <el-col :span="11"><div class="row-bg title-center"><hr class="title-line"/></div></el-col>
+    </el-row>
 
-      <el-table-column align="center" label="序号" width="65">
-        <template scope="scope">
-          <span>{{scope.row.id}}</span>
-        </template>
-      </el-table-column>
+    <div class="app-container calendar-list-container">
+      <el-table :key='tableKey' :data="list" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%;margin-top:20px;">
 
-      <el-table-column width="180px" align="center" label="时间">
-        <template scope="scope">
-          <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
-        </template>
-      </el-table-column>
+        <el-table-column align="center" label="序号" width="65">
+          <template scope="scope">
+            <span>{{scope.row.id}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column min-width="300px" label="标题">
-        <template scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>
-          <el-tag>{{scope.row.type | typeFilter}}</el-tag>
-        </template>
-      </el-table-column>
+        <el-table-column width="180px" align="center" label="时间">
+          <template scope="scope">
+            <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column width="110px" align="center" label="作者">
-        <template scope="scope">
-          <span>{{scope.row.author}}</span>
-        </template>
-      </el-table-column>
+        <el-table-column min-width="300px" align="center" label="标题">
+          <template scope="scope">
+            <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>
+            <el-tag>{{scope.row.type | typeFilter}}</el-tag>
+          </template>
+        </el-table-column>
 
-      <el-table-column width="110px" v-if='showAuditor' align="center" label="审核人">
-        <template scope="scope">
-          <span style='color:red;'>{{scope.row.auditor}}</span>
-        </template>
-      </el-table-column>
+        <el-table-column width="110px" align="center" label="作者">
+          <template scope="scope">
+            <span>{{scope.row.author}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column align="center" label="阅读数" width="95">
-        <template scope="scope">
-          <span class="link-type" @click='handleFetchPv(scope.row.pageviews)'>{{scope.row.pageviews}}</span>
-        </template>
-      </el-table-column>
+        <el-table-column width="110px" v-if='showAuditor' align="center" label="审核人">
+          <template scope="scope">
+            <span style='color:red;'>{{scope.row.auditor}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column class-name="status-col" label="状态" width="90">
-        <template scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
-        </template>
-      </el-table-column>
+        <el-table-column align="center" label="阅读数" width="95">
+          <template scope="scope">
+            <span class="link-type" @click='handleFetchPv(scope.row.pageviews)'>{{scope.row.pageviews}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column align="center" label="操作" width="150">
-        <template scope="scope">
-          <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleModifyStatus(scope.row,'published')">发布
-          </el-button>
-          <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿
-          </el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="small" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
-          </el-button>
-        </template>
-      </el-table-column>
+        <el-table-column class-name="status-col" label="状态" width="90">
+          <template scope="scope">
+            <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
+          </template>
+        </el-table-column>
 
-    </el-table>
+        <el-table-column align="center" label="操作" width="150">
+          <template scope="scope">
+            <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleModifyStatus(scope.row,'published')">发布
+            </el-button>
+            <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿
+            </el-button>
+            <el-button v-if="scope.row.status!='deleted'" size="small" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+            </el-button>
+          </template>
+        </el-table-column>
 
-    <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-        :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
-    </div>
-
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="类型">
-          <el-select class="filter-item" v-model="temp.type" placeholder="请选择">
-            <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="状态">
-          <el-select class="filter-item" v-model="temp.status" placeholder="请选择">
-            <el-option v-for="item in  statusOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="时间">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="选择日期时间">
-          </el-date-picker>
-        </el-form-item>
-
-        <el-form-item label="标题">
-          <el-input v-model="temp.title"></el-input>
-        </el-form-item>
-
-        <el-form-item label="点评">
-          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入内容" v-model="temp.remark">
-          </el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
-        <el-button v-else type="primary" @click="update">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog title="阅读数统计" :visible.sync="dialogPvVisible" size="small">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="渠道"> </el-table-column>
-        <el-table-column prop="pv" label="pv"> </el-table-column>
       </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
 
+      <div v-show="!listLoading" class="pagination-container">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+          :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+      </div>
+
+      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+        <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
+          <el-form-item label="类型">
+            <el-select class="filter-item" v-model="temp.type" placeholder="请选择">
+              <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="状态">
+            <el-select class="filter-item" v-model="temp.status" placeholder="请选择">
+              <el-option v-for="item in  statusOptions" :key="item" :label="item" :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="时间">
+            <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="选择日期时间">
+            </el-date-picker>
+          </el-form-item>
+
+          <el-form-item label="标题">
+            <el-input v-model="temp.title"></el-input>
+          </el-form-item>
+
+          <el-form-item label="点评">
+            <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入内容" v-model="temp.remark">
+            </el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
+          <el-button v-else type="primary" @click="update">确 定</el-button>
+        </div>
+      </el-dialog>
+
+      <el-dialog title="阅读数统计" :visible.sync="dialogPvVisible" size="small">
+        <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
+          <el-table-column prop="key" label="渠道"> </el-table-column>
+          <el-table-column prop="pv" label="pv"> </el-table-column>
+        </el-table>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogPvVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
+
+    </div>
   </div>
 </template>
 
@@ -408,7 +421,7 @@
         row.status = status;
       },
       handleCreate() {
-        this.$router.push({name: 'articlesAdd'})
+        this.$router.push({path: '/articlesAdd'})
       },
       handleUpdate(row) {
         this.temp = Object.assign({}, row);
@@ -467,10 +480,8 @@
         };
       },
       handleFetchPv(pv) {
-        fetchPv(pv).then(response => {
-          this.pvData = response.data.pvData;
+          this.pvData = [{"key":"PC网站","pv":1024},{"key":"mobile网站","pv":1024},{"key":"ios","pv":1024},{"key":"android","pv":1024}];
           this.dialogPvVisible = true;
-        })
       },
       handleDownload() {
         require.ensure([], () => {
@@ -494,8 +505,45 @@
     }
   }
 </script>
-<style scoped>
-.filter-container {
- margin-top:20px;
-}
+<style scoped lang="scss">
+  .pagination-container {
+   text-align: center;
+   margin-top: 20px;
+  }
+  .filter-container {
+   text-align:center;
+   margin:25px auto;
+  }
+  .el-row {
+      margin-bottom: 20px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .el-col {
+      border-radius: 4px;
+    }
+    .grid-content {
+      border-radius: 4px;
+      min-height: 36px;
+      .center {
+       text-align: center;
+      }
+      .display {
+       display: block;
+      }
+    }
+    .row-bg {
+      padding: 15px 0;
+    }
+    .title-center {
+      font-size: 20px;
+      line-height: 36px;
+    }
+    .title-line {
+      margin:0px;
+      height:1px;
+      border:0px;
+      background-color:#e2e2e2;
+    }
 </style>
