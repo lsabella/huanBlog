@@ -146,7 +146,7 @@ export default {
       }
     },
     handleEdit(index, row) {
-      this.$router.push({name: 'timeLineadd'})
+      this.$router.push({path: '/timeLineadd'})
       console.log(index, row);
     },
     handleDelete(index, row) {

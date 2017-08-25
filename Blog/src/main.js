@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import axios from 'axios'
 import App from './App'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
@@ -15,14 +16,14 @@ import '../static/UE/lang/zh-cn/zh-cn.js'
 import '../static/UE/ueditor.parse.min.js'
 
 import router from './router'
-import Mock from './mock'
-Mock.bootstrap()
 import 'font-awesome/css/font-awesome.min.css'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(vueWaves)
+Vue.prototype.$http = axios
+Vue.axios = axios
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {
@@ -34,7 +35,8 @@ router.beforeEach((to, from, next) => {
   if (to.path == '/login') {
     sessionStorage.removeItem('user');
   }
-  let user = JSON.parse(sessionStorage.getItem('user'));
+  let user = sessionStorage.getItem('user');
+//  let user = 'lsabella'
   if (!user && to.path != '/login') {
     next({ path: '/login' })
   } else {

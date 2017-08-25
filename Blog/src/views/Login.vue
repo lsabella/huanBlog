@@ -16,14 +16,15 @@
 </template>
 
 <script>
-  import { requestLogin } from '../api/api'
+  import service from '../service'
+  import qs from 'qs'
   export default {
     data () {
       return {
         logining: false,
         ruleForm2: {
           account: 'lsabella',
-          checkPass: '123456'
+          checkPass: 'DH19932019'
         },
         rules2: {
           account: [
@@ -43,27 +44,26 @@
       handleSubmit2 (ev) {
         this.$refs.ruleForm2.validate((valid) => {
           if (valid) {
-            this.logining = true
-            var loginParams = {username: this.ruleForm2.account, password: this.ruleForm2.checkPass}
-            requestLogin(loginParams).then(data => {
-              console.log(data)
-              this.logining = false
-              let { msg, code, user } = data
-              if (code !== 200) {
-                this.$message({
-                  message: msg,
-                  type: 'error'
-                })
-              } else {
-                sessionStorage.setItem('user', JSON.stringify(user))
-                this.$router.push({ path: '/dashboard' })
-              }
-            })
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
+             this.onSubmit()
+            }
+         })
+      },
+      async onSubmit () {
+        try {
+          this.logining = true
+          var loginParams = {account: this.ruleForm2.account, password: this.ruleForm2.checkPass}
+          let response = await service.login.login(JSON.stringify(loginParams))
+          service.handleResponse.defaultDeal(response, function () {
+           console.log(response.data.data.account, 'kankan')
+           console.log(response.data.data,'结果的是msg，code，user么')
+            this.logining = false
+            let user = response.data.data
+            sessionStorage.setItem('user', JSON.stringify(user));
+            this.$router.push({ path: '/dashboard' })
+          }.bind(this))
+        } catch (err) {
+          console.log(err)
+        }
       }
     }
   }

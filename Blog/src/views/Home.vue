@@ -115,8 +115,10 @@ export default {
   mounted () {
 			var user = sessionStorage.getItem('user');
 			if (user) {
+			  console.log(user)
 				user = JSON.parse(user);
-				this.sysUserName = user.name || '';
+  		  console.log(user,'解析过')
+				this.sysUserName = user.account || '';
 			}
 			console.log(this.$store, 999)
   }

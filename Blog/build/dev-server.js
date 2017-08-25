@@ -22,6 +22,23 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+
+//app.all('*', (req, res, next) => {
+//  var origin = req.headers.origin;
+//  res.header('Access-Control-Allow-Origin', origin);
+//  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, token');
+//  res.header('Access-Control-Allow-Credentials', true);
+//  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, DELETE');
+//  next()
+//});
+//
+app.all("*", function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+  next();
+});
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
@@ -40,6 +57,15 @@ compiler.plugin('compilation', function (compilation) {
     cb()
   })
 })
+
+const apiProxy = proxy("nbuxinxiren.cn",{
+  forwardPath:function(req,res){
+    return req._parsedUrl.path
+  }
+})
+
+app.use("/admin/web/*",apiProxy);
+app.use("/login",apiProxy);
 
 // proxy api requests
 Object.keys(proxyTable).forEach(function (context) {
